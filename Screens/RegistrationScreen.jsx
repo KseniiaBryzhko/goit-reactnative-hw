@@ -6,41 +6,53 @@ import {
   View,
   TextInput,
   Pressable,
-  Button,
-  ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import BackgroundImage from "../assets/images/background-image.png";
+import { AntDesign } from "@expo/vector-icons";
 
 export const RegistrationScreen = () => {
   return (
-    <View style={styles.wrapper}>
-      <ImageBackground
-        source={BackgroundImage}
-        resizeMode="cover"
-        style={styles.image}
-      ></ImageBackground>
-      <View style={styles.container}>
-        <View style={styles.avatar}></View>
-        <Text style={styles.title}>Реєстрація</Text>
-        <TextInput placeholder="Логін" style={styles.input} />
-        <TextInput
-          placeholder="Адреса електронної пошти"
-          style={styles.input}
-        />
-        <TextInput placeholder="Пароль" style={styles.input} />
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
-            },
-            styles.button,
-          ]}
-        >
-          <Text style={styles.buttonText}>Зареєструватися</Text>
-        </Pressable>
-        <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={-500}
+    >
+      <View style={styles.wrapper}>
+        <ImageBackground
+          source={BackgroundImage}
+          resizeMode="cover"
+          style={styles.image}
+        ></ImageBackground>
+        <View style={styles.container}>
+          <View style={styles.avatar}>
+            <AntDesign name="pluscircleo" size={25} style={styles.icon} />
+          </View>
+          <Text style={styles.title}>Реєстрація</Text>
+          <TextInput placeholder="Логін" style={styles.input} />
+          <TextInput
+            placeholder="Адреса електронної пошти"
+            style={styles.input}
+          />
+          <View>
+            <TextInput placeholder="Пароль" style={styles.input} />
+            <Text style={styles.showPassword}>Показати</Text>
+          </View>
+
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
+              },
+              styles.button,
+            ]}
+          >
+            <Text style={styles.buttonText}>Зареєструватися</Text>
+          </Pressable>
+          <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -56,9 +68,9 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#FFF",
     alignItems: "center",
-    justifyContent: "center",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    paddingTop: 92,
     position: "absolute",
     bottom: 0,
     height: 549,
@@ -71,10 +83,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     top: -60,
   },
+  icon: {
+    position: "absolute",
+    color: "#FF6C00",
+    bottom: 14,
+    right: "-10%",
+  },
   input: {
     width: 343,
     height: 50,
-    padding: 16,
+    paddingBottom: 15,
+    paddingTop: 16,
+    paddingHorizontal: 16,
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     borderWidth: 1,
@@ -85,7 +105,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   title: {
-    marginTop: 32,
+    marginBottom: 17,
     color: "#212121",
     textAlign: "center",
     fontFamily: "Roboto-Medium",
@@ -108,6 +128,15 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 16,
+    color: "#1B4371",
+    textAlign: "center",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  showPassword: {
+    position: "absolute",
+    top: 28,
+    right: 16,
     color: "#1B4371",
     textAlign: "center",
     fontSize: 16,
