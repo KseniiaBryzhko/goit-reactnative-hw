@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -8,14 +8,16 @@ import {
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
-import BackgroundImage from "../assets/images/background-image.png";
-import { AntDesign } from "@expo/vector-icons";
+import BackgroundImage from "../images/background-image.png";
 
 export const LoginScreen = () => {
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      style={{ flex: 1 }}
+      style={styles.wrapper}
       keyboardVerticalOffset={-500}
     >
       <View style={styles.wrapper}>
@@ -28,10 +30,20 @@ export const LoginScreen = () => {
           <Text style={styles.title}>Увійти</Text>
           <TextInput
             placeholder="Адреса електронної пошти"
-            style={styles.input}
+            placeholderTextColor="#BDBDBD"
+            style={[styles.input, isEmailFocused && styles.inputFocused]}
+            onFocus={() => setIsEmailFocused(true)}
+            onBlur={() => setIsEmailFocused(false)}
           />
-          <View>
-            <TextInput placeholder="Пароль" style={styles.input} />
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              placeholder="Пароль"
+              placeholderTextColor="#BDBDBD"
+              secureTextEntry={true}
+              style={[styles.input, isPasswordFocused && styles.inputFocused]}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+            />
             <Text style={styles.showPassword}>Показати</Text>
           </View>
 
@@ -45,13 +57,8 @@ export const LoginScreen = () => {
           >
             <Text style={styles.buttonText}>Увійти</Text>
           </Pressable>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 5,
-            }}
-          >
+
+          <View style={styles.textRegWrapper}>
             <Text style={styles.text}>Немає акаунту?</Text>
             <Pressable>
               <Text style={styles.textRegistration}>Зареєструватися</Text>
@@ -76,14 +83,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     alignItems: "center",
     paddingTop: 32,
+    paddingBottom: 132,
+    paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     position: "absolute",
     bottom: 0,
-    height: 489,
+  },
+  passwordWrapper: {
+    position: "relative",
+    width: "100%",
   },
   input: {
-    width: 343,
+    width: "100%",
     height: 50,
     paddingBottom: 15,
     paddingTop: 16,
@@ -92,10 +104,15 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 6,
-    color: "#BDBDBD",
+    color: "#212121",
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     marginTop: 16,
+    textDecorationLine: "none",
+  },
+  inputFocused: {
+    backgroundColor: "#fff",
+    borderColor: "#FF6C00",
   },
   title: {
     marginBottom: 17,
@@ -107,7 +124,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 43,
-    width: 343,
+    width: "100%",
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 100,
@@ -126,18 +143,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
+  textRegWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+  },
   textRegistration: {
     marginTop: 16,
     color: "#1B4371",
     textAlign: "center",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
-    marginLeft: 5,
     textDecorationLine: "underline",
   },
   showPassword: {
     position: "absolute",
-    top: 26,
+    top: 27,
     right: 16,
     color: "#1B4371",
     textAlign: "center",

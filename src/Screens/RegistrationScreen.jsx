@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -8,14 +8,18 @@ import {
   Pressable,
   KeyboardAvoidingView,
 } from "react-native";
-import BackgroundImage from "../assets/images/background-image.png";
+import BackgroundImage from "../images/background-image.png";
 import { AntDesign } from "@expo/vector-icons";
 
 export const RegistrationScreen = () => {
+  const [isLoginFocused, setIsLoginFocused] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      style={{ flex: 1 }}
+      style={styles.wrapper}
       keyboardVerticalOffset={-500}
     >
       <View style={styles.wrapper}>
@@ -29,13 +33,29 @@ export const RegistrationScreen = () => {
             <AntDesign name="pluscircleo" size={25} style={styles.icon} />
           </View>
           <Text style={styles.title}>Реєстрація</Text>
-          <TextInput placeholder="Логін" style={styles.input} />
+          <TextInput
+            placeholder="Логін"
+            placeholderTextColor="#BDBDBD"
+            style={[styles.input, isLoginFocused && styles.inputFocused]}
+            onFocus={() => setIsLoginFocused(true)}
+            onBlur={() => setIsLoginFocused(false)}
+          />
           <TextInput
             placeholder="Адреса електронної пошти"
-            style={styles.input}
+            placeholderTextColor="#BDBDBD"
+            style={[styles.input, isEmailFocused && styles.inputFocused]}
+            onFocus={() => setIsEmailFocused(true)}
+            onBlur={() => setIsEmailFocused(false)}
           />
-          <View>
-            <TextInput placeholder="Пароль" style={styles.input} />
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              placeholder="Пароль"
+              placeholderTextColor="#BDBDBD"
+              secureTextEntry={true}
+              style={[styles.input, isPasswordFocused && styles.inputFocused]}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+            />
             <Text style={styles.showPassword}>Показати</Text>
           </View>
 
@@ -49,7 +69,12 @@ export const RegistrationScreen = () => {
           >
             <Text style={styles.buttonText}>Зареєструватися</Text>
           </Pressable>
-          <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+          <View style={styles.textLoginWrapper}>
+            <Text style={styles.text}>Вже є акаунт?</Text>
+            <Pressable>
+              <Text style={styles.textLogin}>Увійти</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -71,9 +96,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 92,
+    paddingBottom: 66,
+    paddingHorizontal: 16,
     position: "absolute",
     bottom: 0,
-    height: 549,
   },
   avatar: {
     position: "absolute",
@@ -89,8 +115,12 @@ const styles = StyleSheet.create({
     bottom: 14,
     right: "-10%",
   },
+  passwordWrapper: {
+    position: "relative",
+    width: "100%",
+  },
   input: {
-    width: 343,
+    width: "100%",
     height: 50,
     paddingBottom: 15,
     paddingTop: 16,
@@ -99,10 +129,15 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 6,
-    color: "#BDBDBD",
+    color: "#212121",
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     marginTop: 16,
+    textDecorationLine: "none",
+  },
+  inputFocused: {
+    backgroundColor: "#fff",
+    borderColor: "#FF6C00",
   },
   title: {
     marginBottom: 17,
@@ -114,7 +149,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 43,
-    width: 343,
+    width: "100%",
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 100,
@@ -133,9 +168,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },
+  textLoginWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+  },
+  textLogin: {
+    marginTop: 16,
+    color: "#1B4371",
+    textAlign: "center",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
   showPassword: {
     position: "absolute",
-    top: 28,
+    top: 27,
     right: 16,
     color: "#1B4371",
     textAlign: "center",

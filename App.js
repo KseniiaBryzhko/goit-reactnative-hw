@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { RegistrationScreen } from "./Screens/RegistrationScreen";
-import { LoginScreen } from "./Screens/LoginScreen";
-import { PostsScreen } from "./Screens/PostsScreen";
+import { RegistrationScreen } from "./src/Screens/RegistrationScreen";
+import { LoginScreen } from "./src/Screens/LoginScreen";
+import { PostsScreen } from "./src/Screens/PostsScreen";
 import { useFonts } from "expo-font";
 
 export default function App() {
