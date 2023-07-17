@@ -7,6 +7,8 @@ import {
   TextInput,
   Pressable,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import BackgroundImage from "../images/background-image.png";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,67 +19,69 @@ export const RegistrationScreen = () => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={styles.wrapper}
-      keyboardVerticalOffset={-500}
-    >
-      <View style={styles.wrapper}>
-        <ImageBackground
-          source={BackgroundImage}
-          resizeMode="cover"
-          style={styles.image}
-        ></ImageBackground>
-        <View style={styles.container}>
-          <View style={styles.avatar}>
-            <AntDesign name="pluscircleo" size={25} style={styles.icon} />
-          </View>
-          <Text style={styles.title}>Реєстрація</Text>
-          <TextInput
-            placeholder="Логін"
-            placeholderTextColor="#BDBDBD"
-            style={[styles.input, isLoginFocused && styles.inputFocused]}
-            onFocus={() => setIsLoginFocused(true)}
-            onBlur={() => setIsLoginFocused(false)}
-          />
-          <TextInput
-            placeholder="Адреса електронної пошти"
-            placeholderTextColor="#BDBDBD"
-            style={[styles.input, isEmailFocused && styles.inputFocused]}
-            onFocus={() => setIsEmailFocused(true)}
-            onBlur={() => setIsEmailFocused(false)}
-          />
-          <View style={styles.passwordWrapper}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.wrapper}
+        keyboardVerticalOffset={-500}
+      >
+        <View style={styles.wrapper}>
+          <ImageBackground
+            source={BackgroundImage}
+            resizeMode="cover"
+            style={styles.image}
+          ></ImageBackground>
+          <View style={styles.container}>
+            <View style={styles.avatar}>
+              <AntDesign name="pluscircleo" size={25} style={styles.icon} />
+            </View>
+            <Text style={styles.title}>Реєстрація</Text>
             <TextInput
-              placeholder="Пароль"
+              placeholder="Логін"
               placeholderTextColor="#BDBDBD"
-              secureTextEntry={true}
-              style={[styles.input, isPasswordFocused && styles.inputFocused]}
-              onFocus={() => setIsPasswordFocused(true)}
-              onBlur={() => setIsPasswordFocused(false)}
+              style={[styles.input, isLoginFocused && styles.inputFocused]}
+              onFocus={() => setIsLoginFocused(true)}
+              onBlur={() => setIsLoginFocused(false)}
             />
-            <Text style={styles.showPassword}>Показати</Text>
-          </View>
+            <TextInput
+              placeholder="Адреса електронної пошти"
+              placeholderTextColor="#BDBDBD"
+              style={[styles.input, isEmailFocused && styles.inputFocused]}
+              onFocus={() => setIsEmailFocused(true)}
+              onBlur={() => setIsEmailFocused(false)}
+            />
+            <View style={styles.passwordWrapper}>
+              <TextInput
+                placeholder="Пароль"
+                placeholderTextColor="#BDBDBD"
+                secureTextEntry={true}
+                style={[styles.input, isPasswordFocused && styles.inputFocused]}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+              />
+              <Text style={styles.showPassword}>Показати</Text>
+            </View>
 
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
-              },
-              styles.button,
-            ]}
-          >
-            <Text style={styles.buttonText}>Зареєструватися</Text>
-          </Pressable>
-          <View style={styles.textLoginWrapper}>
-            <Text style={styles.text}>Вже є акаунт?</Text>
-            <Pressable>
-              <Text style={styles.textLogin}>Увійти</Text>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
+                },
+                styles.button,
+              ]}
+            >
+              <Text style={styles.buttonText}>Зареєструватися</Text>
             </Pressable>
+            <View style={styles.textLoginWrapper}>
+              <Text style={styles.text}>Вже є акаунт?</Text>
+              <Pressable>
+                <Text style={styles.textLogin}>Увійти</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

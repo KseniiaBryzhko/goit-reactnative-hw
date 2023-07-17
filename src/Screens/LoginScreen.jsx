@@ -7,6 +7,8 @@ import {
   TextInput,
   Pressable,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import BackgroundImage from "../images/background-image.png";
 
@@ -15,58 +17,60 @@ export const LoginScreen = () => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={styles.wrapper}
-      keyboardVerticalOffset={-500}
-    >
-      <View style={styles.wrapper}>
-        <ImageBackground
-          source={BackgroundImage}
-          resizeMode="cover"
-          style={styles.image}
-        ></ImageBackground>
-        <View style={styles.container}>
-          <Text style={styles.title}>Увійти</Text>
-          <TextInput
-            placeholder="Адреса електронної пошти"
-            placeholderTextColor="#BDBDBD"
-            style={[styles.input, isEmailFocused && styles.inputFocused]}
-            onFocus={() => setIsEmailFocused(true)}
-            onBlur={() => setIsEmailFocused(false)}
-          />
-          <View style={styles.passwordWrapper}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.wrapper}
+        keyboardVerticalOffset={-500}
+      >
+        <View style={styles.wrapper}>
+          <ImageBackground
+            source={BackgroundImage}
+            resizeMode="cover"
+            style={styles.image}
+          ></ImageBackground>
+          <View style={styles.container}>
+            <Text style={styles.title}>Увійти</Text>
             <TextInput
-              placeholder="Пароль"
+              placeholder="Адреса електронної пошти"
               placeholderTextColor="#BDBDBD"
-              secureTextEntry={true}
-              style={[styles.input, isPasswordFocused && styles.inputFocused]}
-              onFocus={() => setIsPasswordFocused(true)}
-              onBlur={() => setIsPasswordFocused(false)}
+              style={[styles.input, isEmailFocused && styles.inputFocused]}
+              onFocus={() => setIsEmailFocused(true)}
+              onBlur={() => setIsEmailFocused(false)}
             />
-            <Text style={styles.showPassword}>Показати</Text>
-          </View>
+            <View style={styles.passwordWrapper}>
+              <TextInput
+                placeholder="Пароль"
+                placeholderTextColor="#BDBDBD"
+                secureTextEntry={true}
+                style={[styles.input, isPasswordFocused && styles.inputFocused]}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+              />
+              <Text style={styles.showPassword}>Показати</Text>
+            </View>
 
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
-              },
-              styles.button,
-            ]}
-          >
-            <Text style={styles.buttonText}>Увійти</Text>
-          </Pressable>
-
-          <View style={styles.textRegWrapper}>
-            <Text style={styles.text}>Немає акаунту?</Text>
-            <Pressable>
-              <Text style={styles.textRegistration}>Зареєструватися</Text>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
+                },
+                styles.button,
+              ]}
+            >
+              <Text style={styles.buttonText}>Увійти</Text>
             </Pressable>
+
+            <View style={styles.textRegWrapper}>
+              <Text style={styles.text}>Немає акаунту?</Text>
+              <Pressable>
+                <Text style={styles.textRegistration}>Зареєструватися</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
