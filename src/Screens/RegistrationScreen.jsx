@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import BackgroundImage from "../images/background-image.png";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,6 +18,21 @@ export const RegistrationScreen = () => {
   const [isLoginFocused, setIsLoginFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = () => {
+    if (!login || !email || !password) {
+      Alert.alert("Please fill in all the fields");
+      return;
+    }
+    console.log(`Login: ${login}; Email: ${email}; Password: ${password}.`);
+    setLogin("");
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -36,10 +52,13 @@ export const RegistrationScreen = () => {
               <AntDesign name="pluscircleo" size={25} style={styles.icon} />
             </View>
             <Text style={styles.title}>Реєстрація</Text>
+
             <TextInput
               placeholder="Логін"
               placeholderTextColor="#BDBDBD"
               style={[styles.input, isLoginFocused && styles.inputFocused]}
+              value={login}
+              onChangeText={setLogin}
               onFocus={() => setIsLoginFocused(true)}
               onBlur={() => setIsLoginFocused(false)}
             />
@@ -47,6 +66,8 @@ export const RegistrationScreen = () => {
               placeholder="Адреса електронної пошти"
               placeholderTextColor="#BDBDBD"
               style={[styles.input, isEmailFocused && styles.inputFocused]}
+              value={email}
+              onChangeText={setEmail}
               onFocus={() => setIsEmailFocused(true)}
               onBlur={() => setIsEmailFocused(false)}
             />
@@ -54,15 +75,23 @@ export const RegistrationScreen = () => {
               <TextInput
                 placeholder="Пароль"
                 placeholderTextColor="#BDBDBD"
-                secureTextEntry={true}
+                secureTextEntry={isPasswordShown ? false : true}
                 style={[styles.input, isPasswordFocused && styles.inputFocused]}
+                value={password}
+                onChangeText={setPassword}
                 onFocus={() => setIsPasswordFocused(true)}
                 onBlur={() => setIsPasswordFocused(false)}
               />
-              <Text style={styles.showPassword}>Показати</Text>
+              <Text
+                style={styles.showPassword}
+                onPress={() => setIsPasswordShown(!isPasswordShown)}
+              >
+                {isPasswordShown ? "Сховати" : "Показати"}
+              </Text>
             </View>
 
             <Pressable
+              onPress={handleSubmit}
               style={({ pressed }) => [
                 {
                   backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
@@ -72,12 +101,10 @@ export const RegistrationScreen = () => {
             >
               <Text style={styles.buttonText}>Зареєструватися</Text>
             </Pressable>
-            <View style={styles.textLoginWrapper}>
-              <Text style={styles.text}>Вже є акаунт?</Text>
-              <Pressable>
-                <Text style={styles.textLogin}>Увійти</Text>
-              </Pressable>
-            </View>
+
+            <Pressable>
+              <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
+            </Pressable>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -171,11 +198,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontFamily: "Roboto-Regular",
-  },
-  textLoginWrapper: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 5,
   },
   textLogin: {
     marginTop: 16,

@@ -9,12 +9,26 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import BackgroundImage from "../images/background-image.png";
 
 export const LoginScreen = () => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = () => {
+    if (!email || !password) {
+      Alert.alert("Please fill in all the fields");
+      return;
+    }
+    console.log(`Email: ${email}; Password: ${password}.`);
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -29,12 +43,15 @@ export const LoginScreen = () => {
             resizeMode="cover"
             style={styles.image}
           ></ImageBackground>
+
           <View style={styles.container}>
             <Text style={styles.title}>Увійти</Text>
             <TextInput
               placeholder="Адреса електронної пошти"
               placeholderTextColor="#BDBDBD"
               style={[styles.input, isEmailFocused && styles.inputFocused]}
+              value={email}
+              onChangeText={setEmail}
               onFocus={() => setIsEmailFocused(true)}
               onBlur={() => setIsEmailFocused(false)}
             />
@@ -42,15 +59,23 @@ export const LoginScreen = () => {
               <TextInput
                 placeholder="Пароль"
                 placeholderTextColor="#BDBDBD"
-                secureTextEntry={true}
+                secureTextEntry={isPasswordShown ? false : true}
                 style={[styles.input, isPasswordFocused && styles.inputFocused]}
+                value={password}
+                onChangeText={setPassword}
                 onFocus={() => setIsPasswordFocused(true)}
                 onBlur={() => setIsPasswordFocused(false)}
               />
-              <Text style={styles.showPassword}>Показати</Text>
+              <Text
+                style={styles.showPassword}
+                onPress={() => setIsPasswordShown(!isPasswordShown)}
+              >
+                {isPasswordShown ? "Сховати" : "Показати"}
+              </Text>
             </View>
 
             <Pressable
+              onPress={handleSubmit}
               style={({ pressed }) => [
                 {
                   backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
