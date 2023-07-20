@@ -9,35 +9,37 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
 } from "react-native";
 import BackgroundImage from "../images/background-image.png";
 import { AntDesign } from "@expo/vector-icons";
 
 export const RegistrationScreen = () => {
-  const [isLoginFocused, setIsLoginFocused] = useState(false);
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const handleSubmit = () => {
-    if (!login || !email || !password) {
-      Alert.alert("Please fill in all the fields");
-      return;
+    setLoginError(!login);
+    setEmailError(!email);
+    setPasswordError(!password);
+
+    if (login && email && password) {
+      console.log(`Login: ${login}; Email: ${email}; Password: ${password}.`);
+      setLogin("");
+      setEmail("");
+      setPassword("");
     }
-    console.log(`Login: ${login}; Email: ${email}; Password: ${password}.`);
-    setLogin("");
-    setEmail("");
-    setPassword("");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={styles.wrapper}
         keyboardVerticalOffset={-500}
       >
@@ -46,66 +48,105 @@ export const RegistrationScreen = () => {
             source={BackgroundImage}
             resizeMode="cover"
             style={styles.image}
-          ></ImageBackground>
-          <View style={styles.container}>
-            <View style={styles.avatar}>
-              <AntDesign name="pluscircleo" size={25} style={styles.icon} />
-            </View>
-            <Text style={styles.title}>Реєстрація</Text>
+          >
+            <View style={styles.container}>
+              <View style={styles.avatar}>
+                <AntDesign name="pluscircleo" size={25} style={styles.icon} />
+              </View>
+              <Text style={styles.title}>Реєстрація</Text>
 
-            <TextInput
-              placeholder="Логін"
-              placeholderTextColor="#BDBDBD"
-              style={[styles.input, isLoginFocused && styles.inputFocused]}
-              value={login}
-              onChangeText={setLogin}
-              onFocus={() => setIsLoginFocused(true)}
-              onBlur={() => setIsLoginFocused(false)}
-            />
-            <TextInput
-              placeholder="Адреса електронної пошти"
-              placeholderTextColor="#BDBDBD"
-              style={[styles.input, isEmailFocused && styles.inputFocused]}
-              value={email}
-              onChangeText={setEmail}
-              onFocus={() => setIsEmailFocused(true)}
-              onBlur={() => setIsEmailFocused(false)}
-            />
-            <View style={styles.passwordWrapper}>
               <TextInput
-                placeholder="Пароль"
+                placeholder="Логін"
                 placeholderTextColor="#BDBDBD"
-                secureTextEntry={isPasswordShown ? false : true}
-                style={[styles.input, isPasswordFocused && styles.inputFocused]}
-                value={password}
-                onChangeText={setPassword}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
+                style={[
+                  styles.input,
+                  isFocused === "Login" && styles.inputFocused,
+                ]}
+                value={login}
+                onChangeText={setLogin}
+                onFocus={() => {
+                  setIsFocused("Login");
+                }}
+                onBlur={() => {
+                  setIsFocused("");
+                }}
               />
-              <Text
-                style={styles.showPassword}
-                onPress={() => setIsPasswordShown(!isPasswordShown)}
+              {loginError && (
+                <Text style={styles.errorMessage}>
+                  Please fill in the login field
+                </Text>
+              )}
+
+              <TextInput
+                placeholder="Адреса електронної пошти"
+                placeholderTextColor="#BDBDBD"
+                style={[
+                  styles.input,
+                  isFocused === "Email" && styles.inputFocused,
+                ]}
+                value={email}
+                onChangeText={setEmail}
+                onFocus={() => {
+                  setIsFocused("Email");
+                }}
+                onBlur={() => {
+                  setIsFocused("");
+                }}
+              />
+              {emailError && (
+                <Text style={styles.errorMessage}>
+                  Please fill in the email field
+                </Text>
+              )}
+
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
+                  secureTextEntry={isPasswordShown ? false : true}
+                  style={[
+                    styles.input,
+                    isFocused === "Password" && styles.inputFocused,
+                  ]}
+                  value={password}
+                  onChangeText={setPassword}
+                  onFocus={() => {
+                    setIsFocused("Password");
+                  }}
+                  onBlur={() => {
+                    setIsFocused("");
+                  }}
+                />
+                <Text
+                  style={styles.showPassword}
+                  onPress={() => setIsPasswordShown(!isPasswordShown)}
+                >
+                  {isPasswordShown ? "Сховати" : "Показати"}
+                </Text>
+              </View>
+              {passwordError && (
+                <Text style={styles.errorMessage}>
+                  Please fill in the password field
+                </Text>
+              )}
+
+              <Pressable
+                onPress={handleSubmit}
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
+                  },
+                  styles.button,
+                ]}
               >
-                {isPasswordShown ? "Сховати" : "Показати"}
-              </Text>
+                <Text style={styles.buttonText}>Зареєструватися</Text>
+              </Pressable>
+
+              <Pressable>
+                <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
+              </Pressable>
             </View>
-
-            <Pressable
-              onPress={handleSubmit}
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
-                },
-                styles.button,
-              ]}
-            >
-              <Text style={styles.buttonText}>Зареєструватися</Text>
-            </Pressable>
-
-            <Pressable>
-              <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
-            </Pressable>
-          </View>
+          </ImageBackground>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -169,6 +210,13 @@ const styles = StyleSheet.create({
   inputFocused: {
     backgroundColor: "#fff",
     borderColor: "#FF6C00",
+  },
+  errorMessage: {
+    marginTop: 4,
+    color: "red",
+    textAlign: "center",
+    fontFamily: "Roboto-Medium",
+    fontSize: 12,
   },
   title: {
     marginBottom: 17,

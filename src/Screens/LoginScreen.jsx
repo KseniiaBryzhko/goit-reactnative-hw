@@ -14,26 +14,28 @@ import {
 import BackgroundImage from "../images/background-image.png";
 
 export const LoginScreen = () => {
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const handleSubmit = () => {
-    if (!email || !password) {
-      Alert.alert("Please fill in all the fields");
-      return;
+    setEmailError(!email);
+    setPasswordError(!password);
+
+    if (email && password) {
+      console.log(`Email: ${email}; Password: ${password}.`);
+      setEmail("");
+      setPassword("");
     }
-    console.log(`Email: ${email}; Password: ${password}.`);
-    setEmail("");
-    setPassword("");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={styles.wrapper}
         keyboardVerticalOffset={-500}
       >
@@ -42,57 +44,82 @@ export const LoginScreen = () => {
             source={BackgroundImage}
             resizeMode="cover"
             style={styles.image}
-          ></ImageBackground>
-
-          <View style={styles.container}>
-            <Text style={styles.title}>Увійти</Text>
-            <TextInput
-              placeholder="Адреса електронної пошти"
-              placeholderTextColor="#BDBDBD"
-              style={[styles.input, isEmailFocused && styles.inputFocused]}
-              value={email}
-              onChangeText={setEmail}
-              onFocus={() => setIsEmailFocused(true)}
-              onBlur={() => setIsEmailFocused(false)}
-            />
-            <View style={styles.passwordWrapper}>
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Увійти</Text>
               <TextInput
-                placeholder="Пароль"
+                placeholder="Адреса електронної пошти"
                 placeholderTextColor="#BDBDBD"
-                secureTextEntry={isPasswordShown ? false : true}
-                style={[styles.input, isPasswordFocused && styles.inputFocused]}
-                value={password}
-                onChangeText={setPassword}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
+                style={[
+                  styles.input,
+                  isFocused === "Email" && styles.inputFocused,
+                ]}
+                value={email}
+                onChangeText={setEmail}
+                onFocus={() => {
+                  setIsFocused("Email");
+                }}
+                onBlur={() => {
+                  setIsFocused("");
+                }}
               />
-              <Text
-                style={styles.showPassword}
-                onPress={() => setIsPasswordShown(!isPasswordShown)}
+              {emailError && (
+                <Text style={styles.errorMessage}>
+                  Please fill in the email field
+                </Text>
+              )}
+
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
+                  secureTextEntry={isPasswordShown ? false : true}
+                  style={[
+                    styles.input,
+                    isFocused === "Password" && styles.inputFocused,
+                  ]}
+                  value={password}
+                  onChangeText={setPassword}
+                  onFocus={() => {
+                    setIsFocused("Password");
+                  }}
+                  onBlur={() => {
+                    setIsFocused("");
+                  }}
+                />
+                <Text
+                  style={styles.showPassword}
+                  onPress={() => setIsPasswordShown(!isPasswordShown)}
+                >
+                  {isPasswordShown ? "Сховати" : "Показати"}
+                </Text>
+              </View>
+              {passwordError && (
+                <Text style={styles.errorMessage}>
+                  Please fill in the password field
+                </Text>
+              )}
+
+              <Pressable
+                onPress={handleSubmit}
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
+                  },
+                  styles.button,
+                ]}
               >
-                {isPasswordShown ? "Сховати" : "Показати"}
-              </Text>
-            </View>
-
-            <Pressable
-              onPress={handleSubmit}
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "##F6F6F6" : "#FF6C00",
-                },
-                styles.button,
-              ]}
-            >
-              <Text style={styles.buttonText}>Увійти</Text>
-            </Pressable>
-
-            <View style={styles.textRegWrapper}>
-              <Text style={styles.text}>Немає акаунту?</Text>
-              <Pressable>
-                <Text style={styles.textRegistration}>Зареєструватися</Text>
+                <Text style={styles.buttonText}>Увійти</Text>
               </Pressable>
+
+              <View style={styles.textRegWrapper}>
+                <Text style={styles.text}>Немає акаунту?</Text>
+                <Pressable>
+                  <Text style={styles.textRegistration}>Зареєструватися</Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
+          </ImageBackground>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -142,6 +169,13 @@ const styles = StyleSheet.create({
   inputFocused: {
     backgroundColor: "#fff",
     borderColor: "#FF6C00",
+  },
+  errorMessage: {
+    marginTop: 4,
+    color: "red",
+    textAlign: "center",
+    fontFamily: "Roboto-Medium",
+    fontSize: 12,
   },
   title: {
     marginBottom: 17,
